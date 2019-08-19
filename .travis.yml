@@ -1,0 +1,14 @@
+# travis.yml
+language:
+  - go
+
+go:
+  - "1.12.x"
+
+# before_install:
+#   - cd hello
+
+script: 
+  - go test -v 
+  - go test -v ./...
+
