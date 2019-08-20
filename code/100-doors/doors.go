@@ -1,42 +1,19 @@
 package main
 
-import (
-	"fmt"
-)
-
-// Door output the final state of 100 doors
-func Door() []int {
-	return configDoor(100)
+// Doors is 100 doors
+type Doors struct {
+	state []bool
+	count uint
 }
 
-func changeDoor(state int) int {
-	if state == 1 {
-		return 0
-	}
-
-	return 1
+func (d *Doors) setDoorCount(count uint) {
+	// d.count = count
 }
 
-func configDoor(countDoor int) []int {
-	doors := make([]int, countDoor+1)
-	for i := 1; i <= countDoor; i++ {
-		j := i
-		for j <= countDoor {
-			doors[j] = changeDoor(doors[j])
-			j += i
-		}
-	}
-
-	openedDoor := make([]int, 0)
-	for i, state := range doors[1:] {
-		if state == 1 {
-			openedDoor = append(openedDoor, i+1)
-		}
-	}
-
-	return openedDoor
+// Do start pass
+func (d *Doors) Do() []int {
+	return []int{}
 }
 
 func main() {
-	fmt.Printf("%v", Door())
 }
