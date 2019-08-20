@@ -1,7 +1,8 @@
 package main
 
 func createTable() string {
-	return ""
+	return ` 01
+`
 }
 
 func main() {
