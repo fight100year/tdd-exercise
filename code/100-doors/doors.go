@@ -27,7 +27,14 @@ func configDoor(countDoor int) []int {
 		}
 	}
 
-	return doors[1:]
+	openedDoor := make([]int, 0)
+	for i, state := range doors[1:] {
+		if state == 1 {
+			openedDoor = append(openedDoor, i+1)
+		}
+	}
+
+	return openedDoor
 }
 
 func main() {
