@@ -2,33 +2,44 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
-
-func init() {
-
-}
 
 var (
 	table = [16]int{}
 )
 
-func createTable() string {
-	return `
- 01
-`
+const (
+	whiteBlock = "   "
+	newLine    = "\n"
+)
+
+func initTable() {
+	for i := range table {
+		table[i] = i
+	}
+}
+
+func randomTable() {
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	for i := len(table) - 1; i > 0; i-- {
+		random := r.Intn(i + 1)
+		table[random], table[i] = table[i], table[random]
+	}
 }
 
 func printTable() (result string) {
-	result += fmt.Sprintln()
+	result += newLine
 	for i, element := range table {
 		if element == 0 {
-			result += "   "
+			result += whiteBlock
 		} else {
 			result += fmt.Sprintf(" %02d", element)
 		}
 
 		if (i+1)%4 == 0 {
-			result += fmt.Sprintln()
+			result += newLine
 		}
 	}
 
@@ -36,5 +47,7 @@ func printTable() (result string) {
 }
 
 func main() {
-
+	initTable()
+	randomTable()
+	fmt.Println(printTable())
 }

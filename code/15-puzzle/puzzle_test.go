@@ -4,14 +4,26 @@ import (
 	"testing"
 )
 
-func TestCreateTable(t *testing.T) {
-	want := `
- 01
-`
-	got := createTable()
+func TestInitTable(t *testing.T) {
+	initTable()
 
-	if want != got {
-		t.Errorf("create table failed: want %v, got %v", want, got)
+	want := [16]int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
+
+	if want != table {
+		t.Errorf("create table failed: want %v, got %v", want, table)
+	}
+}
+
+func TestRandomTable(t *testing.T) {
+	randomTable()
+
+	m := make(map[int]bool, 16)
+	for _, element := range table {
+		m[element] = true
+	}
+
+	if len(m) != 16 {
+		t.Errorf("excepted 16 unique number, got %v", table)
 	}
 }
 
