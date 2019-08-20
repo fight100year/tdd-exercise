@@ -10,12 +10,13 @@ type Doors struct {
 	count uint
 }
 
-func (d *Doors) setDoorCount(count uint) {
+// SetCount set the number of doors
+func (d *Doors) SetCount(count uint) {
 	d.count = count
 	d.state = make([]bool, count+1)
 }
 
-func (d *Doors) do() {
+func (d *Doors) changeState() {
 	for i := uint(1); i <= d.count; i++ {
 		j := i
 		for j <= d.count {
@@ -27,7 +28,7 @@ func (d *Doors) do() {
 
 // Pass query the opened door
 func (d *Doors) Pass() (resutl []int) {
-	d.do()
+	d.changeState()
 
 	for i, isOpened := range d.state {
 		if isOpened {
@@ -38,12 +39,12 @@ func (d *Doors) Pass() (resutl []int) {
 	return
 }
 
-func create100Doors() *Doors {
+func query100DoorState() []int {
 	var doors Doors
-	doors.setDoorCount(100)
-	return &doors
+	doors.SetCount(100)
+	return doors.Pass()
 }
 
 func main() {
-	fmt.Println(create100Doors().Pass())
+	fmt.Println(query100DoorState())
 }

@@ -8,7 +8,7 @@ import (
 func TestDoor(t *testing.T) {
 	t.Run("config test", func(t *testing.T) {
 		var doors Doors
-		doors.setDoorCount(10)
+		doors.SetCount(10)
 		got := doors.Pass()
 		want := []int{1, 4, 9}
 
