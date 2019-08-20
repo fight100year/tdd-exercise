@@ -4,32 +4,47 @@ import (
 	"fmt"
 )
 
-// Door output the final state of 100 doors
-func Door() []int {
-	return configDoor(100)
+// Doors is 100 doors
+type Doors struct {
+	state []bool
+	count uint
 }
 
-func changeDoor(state int) int {
-	if state == 1 {
-		return 0
-	}
-
-	return 1
+// SetCount set the number of doors
+func (d *Doors) SetCount(count uint) {
+	d.count = count
+	d.state = make([]bool, count+1)
 }
 
-func configDoor(countDoor int) []int {
-	doors := make([]int, countDoor+1)
-	for i := 1; i <= countDoor; i++ {
+func (d *Doors) changeState() {
+	for i := uint(1); i <= d.count; i++ {
 		j := i
-		for j <= countDoor {
-			doors[j] = changeDoor(doors[j])
+		for j <= d.count {
+			d.state[j] = !d.state[j]
 			j += i
 		}
 	}
+}
 
-	return doors[1:]
+// Pass query the opened door
+func (d *Doors) Pass() (resutl []int) {
+	d.changeState()
+
+	for i, isOpened := range d.state {
+		if isOpened {
+			resutl = append(resutl, i)
+		}
+	}
+
+	return
+}
+
+func query100DoorState() []int {
+	var doors Doors
+	doors.SetCount(100)
+	return doors.Pass()
 }
 
 func main() {
-	fmt.Printf("%v", Door())
+	fmt.Println(query100DoorState())
 }
