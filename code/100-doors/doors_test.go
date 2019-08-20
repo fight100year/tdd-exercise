@@ -9,7 +9,7 @@ func TestDoor(t *testing.T) {
 	t.Run("config test", func(t *testing.T) {
 		var doors Doors
 		doors.setDoorCount(10)
-		got := doors.Do()
+		got := doors.Pass()
 		want := []int{1, 4, 9}
 
 		if !reflect.DeepEqual(want, got) {
