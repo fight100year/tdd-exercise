@@ -100,6 +100,11 @@ func startCaptureKeyBoard() {
 		}
 		defer termbox.Close()
 
+		for i := 0; i < 80; i++ {
+			fmt.Println()
+		}
+		show()
+
 		for {
 			switch ev := termbox.PollEvent(); ev.Type {
 			case termbox.EventKey:
@@ -109,16 +114,16 @@ func startCaptureKeyBoard() {
 						steps <- ESC
 						break
 					case termbox.KeyArrowUp:
-						steps <- UP
-						break
-					case termbox.KeyArrowDown:
 						steps <- DOWN
 						break
+					case termbox.KeyArrowDown:
+						steps <- UP
+						break
 					case termbox.KeyArrowLeft:
-						steps <- LEFT
+						steps <- RIGHT
 						break
 					case termbox.KeyArrowRight:
-						steps <- RIGHT
+						steps <- LEFT
 						break
 					}
 				}
@@ -167,11 +172,9 @@ func move(key enterKey) {
 }
 
 func run() {
-	fmt.Println(1)
+	startCaptureKeyBoard()
 	initTable()
 	randomTable()
-	show()
-	startCaptureKeyBoard()
 	for {
 		select {
 		case key := <-steps:
