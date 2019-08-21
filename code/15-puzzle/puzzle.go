@@ -19,6 +19,7 @@ var (
 	steps chan enterKey
 
 	posX, posY int
+	countStep  int
 )
 
 func init() {
@@ -126,55 +127,72 @@ func startCaptureKeyBoard() {
 	}()
 }
 
+func show() {
+	fmt.Printf("total step: %d\n", countStep)
+	countStep++
+	fmt.Println(printTable())
+}
+
 func move(key enterKey) {
 	switch key {
 	case UP:
 		if posX != 0 {
 			table[posX][posY], table[posX-1][posY] = table[posX-1][posY], table[posX][posY]
+			posX--
+			show()
 		}
 		break
 	case DOWN:
 		if posX != 3 {
 			table[posX][posY], table[posX+1][posY] = table[posX+1][posY], table[posX][posY]
+			posX++
+			show()
 		}
 		break
 	case LEFT:
 		if posY != 0 {
 			table[posX][posY], table[posX][posY-1] = table[posX][posY-1], table[posX][posY]
+			posY--
+			show()
 		}
 		break
 	case RIGHT:
 		if posY != 3 {
 			table[posX][posY], table[posX][posY+1] = table[posX][posY+1], table[posX][posY]
+			posY++
+			show()
 		}
 		break
 	}
 }
 
 func run() {
+	fmt.Println(1)
 	initTable()
 	randomTable()
+	show()
 	startCaptureKeyBoard()
-	select {
-	case key := <-steps:
-		switch key {
-		case ESC:
-			os.Exit(0)
-		case UP:
-			fallthrough
-		case DOWN:
-			fallthrough
-		case LEFT:
-			fallthrough
-		case RIGHT:
-			move(key)
-			break
-		default:
+	for {
+		select {
+		case key := <-steps:
+			switch key {
+			case ESC:
+				os.Exit(0)
+			case UP:
+				fallthrough
+			case DOWN:
+				fallthrough
+			case LEFT:
+				fallthrough
+			case RIGHT:
+				move(key)
+				break
+			default:
+			}
 		}
 	}
 }
 
 func main() {
 	run()
-	fmt.Println(printTable())
 }
