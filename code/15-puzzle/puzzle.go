@@ -3,16 +3,35 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"time"
+
+	"github.com/nsf/termbox-go"
 )
 
 var (
 	table = [16]int{}
+	steps chan enterKey
 )
+
+func init() {
+	steps = make(chan enterKey)
+}
 
 const (
 	whiteBlock = "   "
 	newLine    = "\n"
+)
+
+type enterKey int
+
+// key
+const (
+	UP enterKey = iota
+	DOWN
+	LEFT
+	RIGHT
+	ESC
 )
 
 func initTable() {
@@ -46,8 +65,68 @@ func printTable() (result string) {
 	return
 }
 
-func main() {
+func startCaptureKeyBoard() {
+	go func() {
+		if err := termbox.Init(); err != nil {
+			panic(err)
+		}
+		defer termbox.Close()
+
+		for {
+			switch ev := termbox.PollEvent(); ev.Type {
+			case termbox.EventKey:
+				{
+					switch ev.Key {
+					case termbox.KeyEsc:
+						steps <- ESC
+						break
+					case termbox.KeyArrowUp:
+						steps <- UP
+						break
+					case termbox.KeyArrowDown:
+						steps <- DOWN
+						break
+					case termbox.KeyArrowLeft:
+						steps <- LEFT
+						break
+					case termbox.KeyArrowRight:
+						steps <- RIGHT
+						break
+					}
+				}
+			}
+		}
+	}()
+}
+
+func move(key enterKey) {
+
+}
+
+func run() {
 	initTable()
 	randomTable()
+	startCaptureKeyBoard()
+	select {
+	case key := <-steps:
+		switch key {
+		case ESC:
+			os.Exit(0)
+		case UP:
+			fallthrough
+		case DOWN:
+			fallthrough
+		case LEFT:
+			fallthrough
+		case RIGHT:
+			move(key)
+			break
+		default:
+		}
+	}
+}
+
+func main() {
+	run()
 	fmt.Println(printTable())
 }
