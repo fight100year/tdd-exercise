@@ -17,6 +17,8 @@ var (
 		{13, 14, 15, 0},
 	}
 	steps chan enterKey
+
+	posX, posY int
 )
 
 func init() {
@@ -43,7 +45,7 @@ func initTable() {
 }
 
 func transform(i int) (int, int) {
-	return i % 4, i / 4
+	return i / 4, i % 4
 }
 
 func randomTable() {
@@ -57,6 +59,18 @@ func randomTable() {
 		table[lastX][lastY], table[changeX][changeY] = table[changeX][changeY], table[lastX][lastY]
 
 		lastPos--
+	}
+
+	findPos()
+}
+
+func findPos() {
+	for x := range table {
+		for y := range table[x] {
+			if table[x][y] == 0 {
+				posX, posY = x, y
+			}
+		}
 	}
 }
 
@@ -113,7 +127,28 @@ func startCaptureKeyBoard() {
 }
 
 func move(key enterKey) {
-
+	switch key {
+	case UP:
+		if posX != 0 {
+			table[posX][posY], table[posX-1][posY] = table[posX-1][posY], table[posX][posY]
+		}
+		break
+	case DOWN:
+		if posX != 3 {
+			table[posX][posY], table[posX+1][posY] = table[posX+1][posY], table[posX][posY]
+		}
+		break
+	case LEFT:
+		if posY != 0 {
+			table[posX][posY], table[posX][posY-1] = table[posX][posY-1], table[posX][posY]
+		}
+		break
+	case RIGHT:
+		if posY != 3 {
+			table[posX][posY], table[posX][posY+1] = table[posX][posY+1], table[posX][posY]
+		}
+		break
+	}
 }
 
 func run() {
