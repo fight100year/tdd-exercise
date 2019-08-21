@@ -10,7 +10,12 @@ import (
 )
 
 var (
-	table = [16]int{}
+	table = [4][4]int{
+		{1, 2, 3, 4},
+		{5, 6, 7, 8},
+		{9, 10, 11, 12},
+		{13, 14, 15, 0},
+	}
 	steps chan enterKey
 )
 
@@ -35,31 +40,39 @@ const (
 )
 
 func initTable() {
-	for i := range table {
-		table[i] = i
-	}
+}
+
+func transform(i int) (int, int) {
+	return i % 4, i / 4
 }
 
 func randomTable() {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
-	for i := len(table) - 1; i > 0; i-- {
-		random := r.Intn(i + 1)
-		table[random], table[i] = table[i], table[random]
+
+	lastPos := 16
+	for lastPos > 1 {
+		changePos := r.Intn(lastPos)
+		lastX, lastY := transform(lastPos - 1)
+		changeX, changeY := transform(changePos)
+		table[lastX][lastY], table[changeX][changeY] = table[changeX][changeY], table[lastX][lastY]
+
+		lastPos--
 	}
 }
 
 func printTable() (result string) {
 	result += newLine
-	for i, element := range table {
-		if element == 0 {
-			result += whiteBlock
-		} else {
-			result += fmt.Sprintf(" %02d", element)
+
+	for x := range table {
+		for y := range table[x] {
+			if table[x][y] == 0 {
+				result += whiteBlock
+			} else {
+				result += fmt.Sprintf(" %02d", table[x][y])
+			}
 		}
 
-		if (i+1)%4 == 0 {
-			result += newLine
-		}
+		result += newLine
 	}
 
 	return
