@@ -28,3 +28,15 @@ func TestCheckPalindrome(t *testing.T) {
 		}
 	}
 }
+
+func BenchmarkCheckPalindrome(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		CheckPalindrome("abccba")
+	}
+}
+
+func BenchmarkCheckPalindrome2(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		CheckPalindrome2("abccba")
+	}
+}
